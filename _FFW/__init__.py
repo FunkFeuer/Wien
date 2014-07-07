@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2014 Mag. Christian Tanzer All rights reserved
+# Copyright (C) 2012-2013 Mag. Christian Tanzer All rights reserved
 # Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
-# #*** <License> ************************************************************
+# #*** <License> ************************************************************#
+# This module is part of the package FFW.
+#
 # This module is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -18,19 +20,25 @@
 #
 #++
 # Name
-#    html/dashboard/app.jnj.media
+#    FFM.__init__
 #
 # Purpose
-#    Media fragment for template html/dashboard/app.jnj
+#    Package defining the Funkfeuer specific classes on top of the common node model
 #
 # Revision Dates
-#     9-Apr-2014 (CT) Creation
-#     2-May-2014 (CT) Add rules for `form.login`, `form.logout`
-#    14-May-2014 (CT) Factor rules for `form` to `JNJ/html/mf3.m.jnj.media`
-#     9-Jul-2014 (CT) Remove CNDB specific stuff, i.e., everything
+#     9-Jul-2014 (CT) Creation
 #    ««revision-date»»···
 #--
 
-Include ("CNDB::html/dashboard/app.jnj.media")
+from   __future__  import absolute_import, division, print_function, unicode_literals
 
-### __END__ html/dashboard/app.jnj.media
+from   _MOM                 import MOM
+import _MOM.Derived_PNS
+
+_desc_ = """
+Funkfeuer specific classes on top of the common node model.
+"""
+
+FFW = MOM.Underived_PNS ()
+
+### __END__ FFW.__init__

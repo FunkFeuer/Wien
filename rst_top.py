@@ -2,7 +2,7 @@
 # Copyright (C) 2012-2014 Mag. Christian Tanzer All rights reserved
 # Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
 # #*** <License> ************************************************************#
-# This module is part of the program FFM.
+# This module is part of the program FFW.
 #
 # This module is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -34,12 +34,14 @@
 #     4-May-2013 (CT) Re-add `http:` for external URLs
 #     4-May-2013 (CT) Add `RAT`
 #     2-May-2014 (CT) Use option `webmaster`
+#     7-Jul-2014 (CT) Add `cndb_template_dir` to `template_dirs`
 #    ««revision-date»»···
 #--
 
 from   __future__  import absolute_import, division, print_function, unicode_literals
 
-from   _FFM                   import FFM
+from   _CNDB                  import CNDB
+import _CNDB._OMP
 from   _GTW                   import GTW
 from   _JNJ                   import JNJ
 from   _MOM                   import MOM
@@ -66,11 +68,12 @@ from   Media_Parameters       import Media_Parameters
 Media_Parameters = Media_Parameters ()
 
 src_dir      = sos.path.dirname (__file__)
-web_root_dir = "//ffm.funkfeuer.at"
+web_root_dir = "//ffw.funkfeuer.at"
 web_src_root = sos.path.abspath (src_dir)
 
 base_template_dir = sos.path.dirname (_JNJ.__file__)
-template_dirs     = [src_dir, base_template_dir]
+cndb_template_dir = sos.path.dirname (_CNDB._JNJ.__file__)
+template_dirs     = [src_dir, cndb_template_dir, base_template_dir]
 
 web_links = \
     [ TFL.Record
@@ -88,7 +91,7 @@ web_links = \
 def root_kw_args (cmd, ** kw) :
     return dict \
         ( console_context   = dict
-            ( FFM           = FFM
+            ( CNDB           = CNDB
             , GTW           = GTW
             , JNJ           = JNJ
             , MOM           = MOM
@@ -98,7 +101,7 @@ def root_kw_args (cmd, ** kw) :
         , copyright_url     = "/impressum.html" ### XXX ???
         , Media_Parameters  = Media_Parameters
         , language          = "de"
-        , owner             = "Funkfeuer"
+        , owner             = "Funkfeuer Wien"
         , web_links         = web_links
         , webmaster         = cmd.webmaster
         , entries           =

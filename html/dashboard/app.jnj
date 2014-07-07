@@ -1,3 +1,4 @@
+{%- extends "CNDB::html/dashboard/app.jnj" %}
 {#- jinja template: html/dashboard/app.jnj -#}
 {#
 ## Copyright (C) 2014 Mag. Christian Tanzer All rights reserved
@@ -22,7 +23,7 @@
 ##    html/dashboard/app.jnj
 ##
 ## Purpose
-##    Template for dashboard for Funkfeuer node database
+##    Funkfeuer specific extension of "CNDB::html/dashboard/app.jnj"
 ##
 ## Revision Dates
 ##     9-Apr-2014 (CT) Creation
@@ -33,123 +34,14 @@
 ##     2-May-2014 (CT) Add blocks `app` and `main`
 ##     5-May-2014 (CT) Factor macro `nav_menu_dashboard` to `app.m.jnj`
 ##     2-Jul-2014 (CT) Move `edit` behind `div#app` (form style)
+##     9-Jul-2014 (CT) Remove CNDB specific stuff, i.e., almost everything
 ##    ««revision-date»»···
 ##--
 #}
 
-{%- import (html_version or "html/5.jnj") as X -%}
-{%- import "html/media_fragments.jnj"     as MF      with context %}
-{%- import "html/dashboard/app.m.jnj"     as DB      with context %}
-{%- import "html/dashboard/edit.m.jnj"    as DB_Edit with context %}
-{%- import "html/dashboard/user.m.jnj"    as DB_User with context %}
-{%- import "html/dashboard/view.m.jnj"    as DB_View with context %}
-
-{%- call X.html (lang = page.language|default ("en")) -%}
-  {%- call X.head () -%}
-    {%- block head_elements -%}
-      <meta charset="{{ page.encoding|default ("utf-8") }}" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="Funkfeuer dashboard">
-      {%- if page.exclude_robots %}
-        <meta name="robots" content="NOINDEX, NOFOLLOW">
-      {% endif -%}
-      {% block head_base_element %}{% endblock head_base_element %}
-        {% block title %}
-          <title>{{ page.h_title|default ("Funkfeuer dashboard") }}</title>
-        {% endblock title -%}
-      {%- block styles %}
-        {%- if template.css_href %}
-          {{ X.link_stylesheet (template.css_href) }}
-        {%- else %}
-          {{ MF.inline_CSS (template.CSS) }}
-        {% endif -%}
-        {{ MF.link_css (template) }}
-      {%- endblock styles %}
-        {%- block scripts %}
-          {{ MF.scripts (template) }}
-        {%- endblock scripts -%}
-      {%- block meta_elements -%}
-        <!-- copyright "{{ page.copyright.year }} {{ page.copyright.holder }}"-->
-        <meta name="generator" content="GTW, JNJ, Jinja2" />
-      {%- endblock meta_elements -%}
-      {{ page.add_headers|safe }}
-    {%- endblock head_elements %}
-  {%- endcall %} {# X.head #}
-  <body>
-    {%- block body -%}
-      {% call X.header () -%}
-        {%- block nav_block -%}
-          {% call X.nav (class="pure-menu pure-menu-fixed pure-menu-horizontal pure-menu-inverse pure-menu-open") -%}
-            {%- block navigate -%}
-              {{ DB.nav_menu_dashboard (page) }}
-              <ul class="nav-menu-links">
-                {%- block nav_menu_links -%}
-                  {{ DB.nav_menu_links (page) }}
-                {%- endblock nav_menu_links -%}
-              </ul>
-              <div class="nav-menu-person">
-                {%- block nav_menu_person -%}
-                  {{ DB.nav_menu_person (page) }}
-                {%- endblock nav_menu_person -%}
-              </div>
-            {%- endblock -%}
-          {%- endcall %} {# X.nav #}
-        {%- endblock nav_block -%}
-      {% endcall %} {# X.header #}
-      {%- block main -%}
-        <div class="main">
-          <div id="messages"></div>
-          {%- block app -%}
-            <div id="app" class="app">
-              <div id="{{ page.db_view.app_div_id }}" class="pure-g-r">
-                {% if page.fill_view %}
-                  {{- DB_View.main (page) -}}
-                {% endif -%}
-              </div>
-              <div id="{{ page.db_user.app_div_id }}" class="pure-g-r">
-                {% if page.fill_user %}
-                  {{- DB_User.main (page) -}}
-                {% endif -%}
-              </div>
-            </div>
-            <div id="{{ page.db_user.app_div_prefix }}edit">
-              {% if page.fill_edit %}
-                {{- DB_Edit.main (page) -}}
-              {% endif -%}
-            </div>
-          {%- endblock app -%}
-        </div>
-      {%- endblock main -%}
-      {% call X.footer () -%}
-        {%- block body_footer %}
-          <p class="pull-left">
-            &copy; {{ page.copyright.year }}
-            <a href="{{ page.copyright.url }}">
-              {{- page.copyright.holder|default ("Funkfeuer.at") -}}
-            </a>
-          </p>
-          <p class="small pull-right">
-            The development of this site was financed by the
-            <a href="http://confine-project.eu">EU FP7 Confine project</a>.
-          </p>
-        {% endblock body_footer -%}
-      {%- endcall -%} {# X.footer #}
-    {%- endblock body -%}
-    {%- block body_tail_scripts -%}
-      {{ MF.js_on_ready (template) }}
-      <script>
-        $("body").ff_dashboard
-          ( { app_div_prefix : "{{ page.app_div_prefix }}" {#- -#}
-            , app_typ_prefix : "{{ page.app_typ_prefix }}" {#- -#}
-            , url : {# -#}
-                { page : "{{ page.abs_href }}/" {#- -#}
-                , pid  : "{{ page.abs_href }}/pid/" {# -#}
-                } {#- -#}
-            }
-          )
-      </script>
-    {%- endblock body_tail_scripts -%}
-  </body>
-{%- endcall -%} {#- X.html -#}
+{%- block body_footer_right -%}
+  The development of this site was financed by the
+  <a href="http://confine-project.eu">EU FP7 Confine project</a>.
+{%- endblock body_footer_right -%}
 
 {#- __END__ jinja template: html/dashboard/app.jnj -#}

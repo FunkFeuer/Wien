@@ -25,40 +25,12 @@
 #
 # Revision Dates
 #     5-May-2014 (CT) Creation
+#     9-Jul-2014 (CT) Remove CNDB specific stuff, i.e., everything
 #    ««revision-date»»···
 #--
 
 from   __future__ import division
 
-#Style_File  ("/media/GTW/css/font-awesome.css")
-#Style_File  ("/media/GTW/css/pure.css")
-
-style_sheet = Style_Sheet \
-    ( Rule
-        (".hero-unit"
-        , background_color     = "#EEEEEE"
-        , border_radius        = Px (6)
-        , font_size            = Rem (1.125)
-        , font_weight          = 500
-        , line_height          = Rem (1.875)
-        , margin               = TRBL (Rem (0.25), 0, Rem (2.0))
-        , padding              = Rem (4.0)
-        , children             =
-           [ Rule
-               ( "h2"
-               , font_size     = Em (1.75)
-               , margin        = TRBL (Rem (0.625), 0)
-               )
-           , Rule
-               ( "img"
-               , max_width     = Percent (100)
-               )
-           , Rule
-               ( "p"
-               , margin        = TRBL (0, 0, Rem (0.625))
-               )
-           ]
-        )
-    )
+Include ("CNDB::html/dashboard/about.jnj.media")
 
 ### __END__ html/dashboard/about.jnj.media

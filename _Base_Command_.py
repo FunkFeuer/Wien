@@ -2,7 +2,7 @@
 # Copyright (C) 2012-2013 Mag. Christian Tanzer All rights reserved
 # Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
 # #*** <License> ************************************************************#
-# This module is part of the program FFM.
+# This module is part of the program FFW.
 #
 # This module is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@
 #    _Base_Command_
 #
 # Purpose
-#    Base command for FFM model and deploy commands
+#    Base command for FFW model and deploy commands
 #
 # Revision Dates
 #     3-Jun-2012 (CT) Creation
@@ -38,7 +38,7 @@ import _TFL.Command
 
 class _Base_Command_ (TFL.Command.Root_Command) :
 
-    nick                  = u"FFM"
+    nick                  = u"FFW"
 
     class Config_Dirs (TFL.Command.Root_Command.Config_Dirs) :
 
@@ -48,7 +48,7 @@ class _Base_Command_ (TFL.Command.Root_Command) :
 
     class Config (TFL.Command.Root_Command.Config) :
 
-        _default = ".ffm.config"
+        _default = ".ffw.config"
 
     # end class Config
 

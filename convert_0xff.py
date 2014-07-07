@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # #*** <License> ************************************************************#
-# This module is part of the program FFM.
+# This module is part of the program FFW.
 #
 # This module is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +29,8 @@ from   rsclib.sqlparser       import make_naive, SQL_Parser
 from   _GTW                   import GTW
 from   _TFL                   import TFL
 from   _TFL.pyk               import pyk
-from   _FFM                   import FFM
+from   _CNDB                  import CNDB
+import _CNDB._OMP
 from   _GTW._OMP._PAP         import PAP
 from   _GTW._OMP._Auth        import Auth
 from   _MOM.import_MOM        import Q
@@ -38,7 +39,7 @@ from   spider.parser          import Guess
 from   spider.common          import unroutable, Interface, Inet4, WLAN_Config
 
 import _TFL.CAO
-import model
+import Command
 
 def ip_mask_key (x) :
     """ Key for sorting IPs (as key of a dict iter) """
@@ -85,7 +86,7 @@ class Consolidated_Interface (object) :
         dev   = self.device.net_device
         if self.debug :
             pyk.fprint ("device: %s ip: %s" % (self.device, self.ip))
-        ffm   = self.convert.ffm
+        ffw   = self.convert.ffw
         desc  = []
         if self.names :
             desc.append ('Spider Interfaces: %s' % ', '.join (self.names))
@@ -93,12 +94,12 @@ class Consolidated_Interface (object) :
             desc.append ('Spider IP: %s' % self.spider_ip)
         desc = '\n'.join (desc) or None
         if self.is_wlan :
-            iface   = self.net_interface = ffm.Wireless_Interface \
+            iface   = self.net_interface = ffw.Wireless_Interface \
                 (left = dev, name = self.ifname, desc = desc, raw = True)
             if self.wlan_info :
                 std = None
                 if self.wlan_info.standard is not None :
-                    std  = ffm.Wireless_Standard.instance \
+                    std  = ffw.Wireless_Standard.instance \
                         (name = self.wlan_info.standard, raw = True)
                 mode = None
                 if self.wlan_info.mode :
@@ -118,11 +119,11 @@ class Consolidated_Interface (object) :
                     , standard = std
                     )
                 if self.wlan_info.channel is not None :
-                    chan = ffm.Wireless_Channel.instance \
+                    chan = ffw.Wireless_Channel.instance \
                         (std, self.wlan_info.channel, raw = True)
-                    ffm.Wireless_Interface_uses_Wireless_Channel (iface, chan)
+                    ffw.Wireless_Interface_uses_Wireless_Channel (iface, chan)
         else :
-            iface   = self.net_interface = ffm.Wired_Interface \
+            iface   = self.net_interface = ffw.Wired_Interface \
                 (left = dev, name = self.ifname, desc = desc, raw = True)
         manager = dev.node.manager
         scope   = self.convert.scope
@@ -135,9 +136,9 @@ class Consolidated_Interface (object) :
             assert not ip.done
             ip.set_done ()
             net     = IP4_Address (ip.ip, ip.cidr)
-            network = ffm.IP4_Network.instance (net)
+            network = ffw.IP4_Network.instance (net)
             netadr  = network.reserve (ip.ip, manager)
-            ffm.Net_Interface_in_IP4_Network \
+            ffw.Net_Interface_in_IP4_Network \
                 (iface, netadr, mask_len = 32, name = self.ipname)
             if len (scope.uncommitted_changes) > 10 :
                 scope.commit ()
@@ -208,9 +209,9 @@ class Consolidated_Device (object) :
     # end def __init__
 
     @property
-    def ffm_node (self) :
-        return self.convert.ffm_node_by_id [self.id_nodes]
-    # end def ffm_node
+    def ffw_node (self) :
+        return self.convert.ffw_node_by_id [self.id_nodes]
+    # end def ffw_node
 
     def add_redeemer_ip (self, ip) :
         """ Add redeemer ip address. """
@@ -231,7 +232,7 @@ class Consolidated_Device (object) :
         """ Create device in database """
         assert self.net_device is None
         assert not self.merged
-        ffm = self.convert.ffm
+        ffw = self.convert.ffw
         if self.debug :
             pyk.fprint ('dev:', self.id, self.name)
         if self.if_idx > 1 :
@@ -247,7 +248,7 @@ class Consolidated_Device (object) :
                     )
         # FIXME: We want correct info from nodes directly
         # looks like most firmware can give us this info
-        devtype = ffm.Net_Device_Type.instance (name = 'Generic')
+        devtype = ffw.Net_Device_Type.instance (name = 'Generic')
         comments = dict \
             ( hardware = 'Hardware'
             , antenna  = 'Antenne'
@@ -256,9 +257,9 @@ class Consolidated_Device (object) :
         d    = self.redeemer_devs [self.devid]
         desc = '\n'.join \
             (': '.join ((v, d [k])) for k, v in comments.iteritems () if d [k])
-        dev = self.net_device = ffm.Net_Device \
+        dev = self.net_device = ffw.Net_Device \
             ( left = devtype
-            , node = self.ffm_node
+            , node = self.ffw_node
             , name = self.shortest_name
             , desc = desc
             , raw  = True
@@ -446,11 +447,11 @@ class Convert (object) :
                 self.spider_devs  [ip] = dev
 
         self.scope          = scope
-        self.ffm            = self.scope.FFM
+        self.ffw            = self.scope.CNDB
         self.pap            = self.scope.GTW.OMP.PAP
         self.mentor         = {}
         self.rsrvd_nets     = {}
-        self.ffm_node_by_id = {}
+        self.ffw_node_by_id = {}
         self.node_by_id     = {}
         self.ip_by_ip       = {}
         self.email_ids      = {}
@@ -556,7 +557,7 @@ class Convert (object) :
                     % (n.id, n.id_members)
                     )
             if owner :
-                node = self.ffm.Node \
+                node = self.ffw.Node \
                     ( name        = n.name
                     , position    = gps
                     , show_in_map = n.map
@@ -566,7 +567,7 @@ class Convert (object) :
                     )
                 self.set_last_change (node, n.changed, n.created)
                 assert (node)
-                self.ffm_node_by_id [n.id] = node
+                self.ffw_node_by_id [n.id] = node
             else :
                 pyk.fprint \
                     ( "ERR:  Node %s: member %s not found"
@@ -977,15 +978,15 @@ class Convert (object) :
             if  (  person_id in self.company_actor
                 or person_id in self.association_actor
                 ) :
-                self.ffm.Person_acts_for_Legal_Entity.instance_or_new \
+                self.ffw.Person_acts_for_Legal_Entity.instance_or_new \
                     (mentor, person)
             else :
-                self.ffm.Person_mentors_Person (mentor, person)
+                self.ffw.Person_mentors_Person (mentor, person)
     # end def create_persons
 
     def check_spider_dev (self, sdev, in4, ips, nodeid) :
         i4       = in4.ip
-        nodename = self.ffm_node_by_id [nodeid].name
+        nodename = self.ffw_node_by_id [nodeid].name
         if not routable (i4) :
             return
         ip4 = IP4_Address (i4)
@@ -1004,7 +1005,7 @@ class Convert (object) :
                 if d :
                     dev  = self.dev_by_id  [d]
                     nid  = dev.id_nodes
-                    node = self.ffm_node_by_id [dev.id_nodes]
+                    node = self.ffw_node_by_id [dev.id_nodes]
                     pyk.fprint \
                         ( "WARN: IP %s of spidered device %s"
                           " belongs to dev %s node %s"
@@ -1285,8 +1286,8 @@ class Convert (object) :
         if self.debug :
             self.debug_output       ()
         self.create_persons         ()
-        self.reserve_net            (self.ip4nets, self.ffm.IP4_Network)
-        self.reserve_net            (self.ip6nets, self.ffm.IP6_Network)
+        self.reserve_net            (self.ip4nets, self.ffw.IP4_Network)
+        self.reserve_net            (self.ip6nets, self.ffw.IP6_Network)
         self.create_nodes           ()
         self.create_ips_and_devices ()
     # end def create
@@ -1294,7 +1295,7 @@ class Convert (object) :
 # end def Convert
 
 def _main (cmd) :
-    scope = model.scope (cmd)
+    scope = Command.scope (cmd)
     if cmd.Break :
         TFL.Environment.py_shell ()
     c = Convert (cmd, scope, debug = False)
@@ -1303,8 +1304,8 @@ def _main (cmd) :
     scope.commit ()
     scope.ems.compact ()
     scope.destroy ()
-    model.command._handle_load_auth_mig \
-        (cmd, mig_auth_file = model.command.default_mig_auth_file + ".0xff")
+    Command.command._handle_load_auth_mig \
+        (cmd, mig_auth_file = Command.command.default_mig_auth_file + ".0xff")
 # end def _main
 
 _Command = TFL.CAO.Cmd \
@@ -1321,9 +1322,9 @@ _Command = TFL.CAO.Cmd \
         , "spider_dump:S=Funkfeuer.dump?Spider pickle dump"
         , "network:S,?Networks already reserved"
         , "spider_ignore_ip:S,?<IP>:<IP> ignore sub-IP for spidered device"
-        ) + model.opts
+        ) + Command.opts
     , min_args        = 1
-    , defaults        = model.command.defaults
+    , defaults        = Command.command.defaults
     )
 
 if __name__ == "__main__" :

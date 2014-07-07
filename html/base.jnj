@@ -1,7 +1,7 @@
-{%- extends "STD::html/base.jnj" %}
+{%- extends "CNDB::html/base.jnj" %}
 {#- jinja template: base.jnj -#}
 {#
-## Copyright (C) 2012 Mag. Christian Tanzer All rights reserved
+## Copyright (C) 2012-2014 Mag. Christian Tanzer All rights reserved
 ## Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
 ## #*** <License> ************************************************************#
 ## This template is part of the web page ffm.funkfeuer.at.
@@ -29,43 +29,11 @@
 ##
 ## Revision Dates
 ##    27-Mar-2012 (CT) Creation
+##     9-Jul-2014 (CT) Remove CNDB specific stuff, i.e., everything
 ##    ««revision-date»»···
 ##--
 #}
-{%- block body_header -%}
-  {#- XXX -#}
-  <span id="ffm-top" title="{{ page.title }}">
-    {{- GTW._T ("Funkfeuer Knotendatenbank") -}}
-  </span>
-{%- endblock body_header -%}
 
-{%- block body_footer -%}
-  <div class="copyright">
-    {%- block body_footer_copyright %}
-      {%- if page.copyright %}
-      Copyright &copy;
-      {{ page.copyright.year if page.copyright.year else GTW.now ("%Y") }}
-      <a href="{{ page.copyright.url }}">
-        {{- page.copyright.holder|default ("funkfeuer.at") -}}
-      </a>
-      {% endif -%}
-    {% endblock body_footer_copyright -%}
-  </div>
-  <div class="top-link">
-    {%- block body_footer_top_link %}
-      <a id="Bottom" href="#ffm-top">{{ GTW._T ("Top of page") }}</a>
-    {% endblock body_footer_top_link -%}
-  </div>
-  <div class="last-change">
-    {%- block body_footer_last_change %}
-      {{- GTW._T ("Last change") -}}:
-      {%- if page.last_changed %}
-        {{ page.last_changed }}
-      {%- else %}
-        {{ GTW.now ("%d/%m/%Y %H:%M" if page.DEBUG else "%d/%m/%Y")}}
-      {% endif -%}
-    {% endblock body_footer_last_change -%}
-  </div>
-{% endblock body_footer -%}
+{#- You can redefine or override blocks of the CNDB::html/base.jnj template -#}
 
 {#- __END__ jinja template: html/base.jnj -#}

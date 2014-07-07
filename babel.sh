@@ -37,8 +37,6 @@ default_langs="en,de"
 default_dirs="_FFM ."
 lib=$(dirname $(python -c 'from _TFL import sos; print sos.path.dirname (sos.__file__)'))
 
-export PYTHONPATH=./:$PYTHONPATH
-
 case "$cmd" in
     "extract" )
         dirs=${1:-${default_dirs}}; shift
@@ -60,7 +58,7 @@ case "$cmd" in
         ;;
     "compile" )
         langs=${1:-${default_langs}}; shift
-        ${lib}/babel.sh compile ./model.py "${langs}"
+        ${lib}/babel.sh compile ./Command.py "${langs}"
         ;;
     * )
         echo "Unknown command $cmd; use one of"

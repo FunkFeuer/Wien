@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2012-2013 Mag. Christian Tanzer All rights reserved
+# Copyright (C) 2012-2014 Mag. Christian Tanzer All rights reserved
 # Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
 # #*** <License> ************************************************************#
 # This module is part of the web page ffm.funkfeuer.at.
@@ -30,80 +30,10 @@
 #     4-Dec-2012 (CT) Remove `http:` (--> protocol-relative)
 #    17-Dec-2012 (CT) Add rules for `textarea.Long` and `.Very-Long`
 #    29-Apr-2013 (CT) Add `GTW.Script._.GTW_jq_util`
+#     9-Jul-2014 (CT) Remove CNDB specific stuff, i.e., everything
 #    ««revision-date»»···
 #--
 
-Include ("STD::html/base.jnj.media")
-
-style_sheet = Style_Sheet \
-    ( Rule
-        ( ".pg_foot"
-        , children       =
-            [ Rule
-                ( ".copyright", ".last-change", ".top-link"
-                , float  = "left"
-                , width  = Percent (33)
-                )
-            , Rule (".copyright",   text_align = "left")
-            , Rule (".last-change", text_align = "right")
-            , Rule (".top-link",    text_align = "center")
-            ]
-        )
-    , Rule
-        ( "#ffm-top", "#ffm-top:target"
-        , background_color    = "transparent"
-        , color               = RGB_X ("#BEBEBE")
-        , display             = "inline-block"
-        , font_size           = Px (45)
-        , font_weight         = "normal"
-        , line_height         = 1
-        , outline             = 0
-        , padding             = TRBL0 (l = Px (5), t = Px (5))
-        , vertical_align      = "top"
-        )
-    , Rule
-        ( "textarea.Long"
-        , height              = Em (5)
-        )
-    , Rule
-        ( "textarea.Very-Long"
-        , height              = Em (10)
-        )
-    )
-
-print_sheet = Style_Sheet \
-    ( Media.Rule
-        ( Media.Query ("print")
-        , rules                   =
-            [ Rule
-                ( ".pg_foot"
-                , children        =
-                    [ Rule_Class
-                        ( "copyright", "last-change"
-                        , float   = "left"
-                        , width   = Percent (50)
-                        )
-                    ]
-                )
-            , Rule
-                ( ".pg_foot .top-link"
-                , display         = "none"
-                , visibility      = "collapse"
-                )
-            ]
-        )
-    , rank  = 1 << 16
-    )
-
-Script \
-    ( src       = "//ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"
-    , condition = "lt IE 9"
-    , rank      = -1000000000
-    )
-
-Script (GTW.Script._.GTW_jq_util)
-
-JS_On_Ready (GTW.JS_On_Ready._.de_obfuscate_a)
-JS_On_Ready (GTW.JS_On_Ready._.GTW_Externalize)
+Include ("CNDB::html/base.jnj.media")
 
 ### __END__ html/base.jnj.media

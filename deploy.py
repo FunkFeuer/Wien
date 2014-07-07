@@ -2,7 +2,7 @@
 # Copyright (C) 2012-2013 Mag. Christian Tanzer All rights reserved
 # Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
 # #*** <License> ************************************************************#
-# This module is part of the program FFM.
+# This module is part of the program FFW.
 #
 # This module is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,7 @@
 #    deploy
 #
 # Purpose
-#    Deploy command for FFM
+#    Deploy command for FFW
 #
 # Revision Dates
 #    23-May-2012 (CT) Creation
@@ -44,15 +44,15 @@ import _GTW._Werkzeug.deploy
 from   _Base_Command_           import _Base_Command_
 
 class Command (_Base_Command_, _GTW._Werkzeug.deploy.Command) :
-    """Manage deployment of FFM application."""
+    """Manage deployment of FFW application."""
 
     _defaults               = dict \
         ( app_dir           = "www/app"
-        , app_module        = "./model.py"
+        , app_module        = "./Command.py"
         , bugs_address      = "tanzer@swing.co.at,ralf@runtux.com"
         , copyright_holder  = "Mag. Christian Tanzer, Ralf Schlatterbeck"
         , languages         = "de,en"
-        , project_name      = "FFM"
+        , project_name      = "FFW"
         )
 
     class App_Config (_Base_Command_.Config) :
@@ -65,13 +65,13 @@ class Command (_Base_Command_, _GTW._Werkzeug.deploy.Command) :
 
     class Config (GTW.Werkzeug.deploy.Command.Config) :
 
-        _default  = ".ffm.deploy.config"
+        _default  = ".ffw.deploy.config"
 
     # end class Config
 
     class _Babel_ (GTW.Werkzeug.deploy.Command._Babel_) :
 
-        _package_dirs       = ["_FFM", "."]
+        _package_dirs       = ["_CNDB", "."]
 
     # end class _Babel_
 
