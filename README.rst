@@ -1,4 +1,4 @@
-README for the FFM web app
+README for the FFW web app
 ===========================
 
 :Authors:
@@ -9,67 +9,20 @@ README for the FFM web app
     Ralf Schlatterbeck
     <rsc@runtux.com>
 
-.. |--| unicode:: U+2013   .. en dash
-.. |---| unicode:: U+2014   .. em dash
-
-The FFM web app is an application that serves data about the network
+The FFW web app is an application that serves data about the network
 nodes deployed by www.funkfeuer.at.
 
-It uses the `tapyr framework`_.
+It uses the `tapyr framework`_ and the `common node database`_ (CNDB).
 
 .. _`tapyr framework`: https://github.com/Tapyr/tapyr
-
-Object model
-------------
-
-This object model (in SVG format) is automagically rendered using
-`graph.py`_, the result of the last run is kept under version control
-(so you can see our progress) in `nodedb.svg`_.
-
-.. _`nodedb.svg`: https://github.com/FFM/FFM/blob/master/doc/nodedb.svg
-.. _`graph.py`: https://github.com/FFM/FFM/blob/master/_FFM/graph.py
-
-.. image:: https://raw.github.com/FFM/FFM/master/doc/nodedb.png
-    :alt: Object model SVG
-    :target: https://github.com/FFM/FFM/blob/master/doc/nodedb.svg
-
-Some notes on the object model: We try to keep only the relevant
-attributes of a real-world object in the object itself |---| everything
-else is modelled as a relation. The blue arrows denote inheritance
-relationships ("IS_A"). The yellow arrows are attributes, e.g., the Node
-has an attribute ``manager`` of type ``Person`` which is required (this
-is implemented as a foreign key in the database).
-
-The black arrows are 1:N relationships (also implemented as foreign keys
-in the database) but the relation objects have their own identity. This
-is used to separate the attribute of an object from its links to other
-objects. It also implements referential integrity constraints: A link is
-deleted if the object to which it points is deleted.
-
-There are different link attributes. A two-way link (implementing an N:M
-relationship) has a ``left`` and a ``right`` side which are also the
-default attribute names. An example is
-``Wireless_Interface_uses_Wireless_Channel``, in the diagram this link
-object is displayed as ``_uses_`` between the ``FFM.Wireless_Channel``
-and ``FFM.Wireless_Interface``. The black arrows connecting these are
-labelled ``left`` and ``right`` which indicates how this should be read.
-Note that in this case the ``left`` attribute is on the right side in
-the diagram. A two-way link like this has an identity and can have
-additional attributes besides ``left`` and ``right``.
-
-There are also unary links with only a ``left`` side. An example is the
-``Device`` which cannot exist without its ``left`` attribute, the
-``Device_Type``. There can be several devices with the same device type.
-This relationship is inherited by ``Antenna`` and ``Antenna_Type`` and
-``Net_Device`` and ``Net_Device_Type``.
-
+.. _`common node database`: https://github.com/CNDB/CNDB
 
 System requirements
 --------------------
 
 - Linux or OS X
 
-  * its best to set up a separate account that runs FFM
+  * its best to set up a separate account that runs FFW
 
 - Apache, with mod-fcgid installed
 
@@ -178,32 +131,32 @@ installer::
      python-psycopg2 python-pyasn1 python-pyquery python-sqlalchemy \
      python-tz python-virtualenv python-werkzeug swig
 
-Other packages can be installed using ``pip`` |---| note that you may want
+Other packages can be installed using ``pip`` — note that you may want
 to install some of these into a virtual python environment (virtualenv),
-see later in sectioni `How to install`_ |---| depending on your
+see later in sectioni `How to install`_ — depending on your
 estimate how often you want to change external packages::
 
  $ pip install plumbum py-bcrypt rcssmin rjsmin rsclib pyspkac
 
 Create user and database user permitted to create databases::
 
- $ adduser ffm
- $ createuser -d ffm -P
+ $ adduser ffw
+ $ createuser -d ffw -P
 
 How to install
 --------------
 
-Assuming an account `ffm` located in /home/ffm, you'll need something
+Assuming an account `ffw` located in /home/ffw, you'll need something
 like the following::
 
-  ### Logged in as `ffm`
-  $ cd /home/ffm
+  ### Logged in as `ffw`
+  $ cd /home/ffw
 
   ### Define config
-  $ vi .ffm.config
+  $ vi .ffw.config
     ### Add the lines (using the appropriate values for **your** install)::
       cookie_salt   = 'some random value, e.g., the result of uuid.uuid4 ()'
-      db_name       = "ffm"
+      db_name       = "ffw"
       db_url        = "postgresql://<account>:<password>@localhost"
       languages     = "de", "en"
       locale_code   = "de"
@@ -248,30 +201,31 @@ system should something go wrong during the upgrade::
   $ mkdir v/1/www/media
   $ ln -s v/1 active
   $ ln -s v/2 passive
-  $ git clone git://github.com/Tapyr/tapyr.git v/1/lib
-  $ git clone git://github.com/FFM/FFM.git     v/1/www/app
+  $ git clone git://github.com/Tapyr/tapyr.git v/1/tapyr
+  $ git clone git://github.com/CNDB/CNDB.git   v/1/cndb
+  $ git clone git://github.com/FFM/FFW.git     v/1/www/app
   $ cp -a v/1 v/2
 
-  $ vi active/www/.ffm.config
+  $ vi active/www/.ffw.config
     ### Add the lines (using the appropriate values for **your** install)::
-      db_name       = "ffm1"
-  $ vi passive/www/.ffm.config
-      db_name       = "ffm2"
+      db_name       = "ffw1"
+  $ vi passive/www/.ffw.config
+      db_name       = "ffw2"
 
   ### Define PYTHONPATH
-  $ export PYTHONPATH=/home/ffm/active/lib
+  $ export PYTHONPATH=/home/ffw/active/cndb:/home/ffw/active/tapyr
 
 With a small config-file, the deploy-app can automatically create an
 Apache configuration file and a fcgi script. You can find sample
 config-files in active/www/app/httpd_config/. For instance,
-active/www/app/httpd_config/ffm_gg32_com__443.config contains::
+active/www/app/httpd_config/ffw_gg32_com__443.config contains::
 
-        config_path     = "~/fcgi/ffm_gg32_com__443.config"
+        config_path     = "~/fcgi/ffw_gg32_com__443.config"
         host_macro      = "gtw_host_ssl"
         port            = "443"
-        script_path     = "~/fcgi/ffm_gg32_com__443.fcgi"
+        script_path     = "~/fcgi/ffw_gg32_com__443.fcgi"
         server_admin    = "christian.tanzer@gmail.com"
-        server_name     = "ffm.gg32.com"
+        server_name     = "ffw.gg32.com"
         ssl_key_name    = "srvr1-gg32-com-2048"
 
 Create a config::
@@ -286,7 +240,7 @@ manually or by modifiying the template.
 For Debian, the apache configuration should be placed into
 ``/etc/apache2/sites-available/``, e.g., into the file
 ``nodedb2.example.com``, and enabled. You probably will have to disable
-the default site installed. We used the following commands |---| we
+the default site installed. We used the following commands — we
 also enable some needed modules::
 
   $ a2ensite nodedb2.example.com
