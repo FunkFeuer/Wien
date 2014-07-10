@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2012-2013 Mag. Christian Tanzer All rights reserved
+# Copyright (C) 2012-2014 Mag. Christian Tanzer All rights reserved
 # Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
 # #*** <License> ************************************************************#
 # This module is part of the program FFW.
@@ -31,19 +31,26 @@
 #     1-Jun-2012 (CT) Remove ancestor `GTW.OMP.deploy`
 #     2-Jun-2012 (CT) Replace `config_defaults` by `Config`
 #     3-Jun-2012 (CT) Factor `_Base_Command_`, add `App_Config`
+#    10-Jul-2014 (CT) Derive `Command` from `CNDB.GTW.deploy.Command`, too
 #    ««revision-date»»···
 #--
 
 from   __future__  import absolute_import, division, print_function #, unicode_literals
 
+from   _CNDB                    import CNDB
 from   _GTW                     import GTW
 from   _TFL                     import TFL
 
+import _CNDB._GTW.deploy
 import _GTW._Werkzeug.deploy
 
 from   _Base_Command_           import _Base_Command_
 
-class Command (_Base_Command_, _GTW._Werkzeug.deploy.Command) :
+class Command \
+          ( _Base_Command_
+          , CNDB.GTW.deploy.Command
+          , GTW.Werkzeug.deploy.Command
+          ) :
     """Manage deployment of FFW application."""
 
     _defaults               = dict \
