@@ -57,6 +57,7 @@
 #    18-Apr-2014 (CT) Add `RST_addons.User_Person*`
 #     5-May-2014 (CT) Replace `landing_page` bei `/about`; add `/impressum`
 #    12-Jun-2014 (CT) DRY startup message
+#    29-Aug-2014 (CT) Remove import for `AFS`
 #    ««revision-date»»···
 #--
 
@@ -100,8 +101,6 @@ from   _TFL._Meta.Once_Property import Once_Property
 from   _TFL._Meta.Property      import Class_Property
 
 import _TFL.CAO
-
-import _GTW._AFS._MOM.Spec
 
 from   _Base_Command_           import _Base_Command_
 from   _CNDB._GTW import RST_addons
