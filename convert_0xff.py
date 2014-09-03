@@ -112,6 +112,9 @@ class Consolidated_Interface (object) :
                     bsid = None
                 if ssid is not None :
                     ssid = ssid.replace (r'\x09', '\x09')
+                    if len (ssid) > 32 :
+                        pyk.fprint ("WARN: Ignoring long ssid %s" % ssid)
+                        ssid = None
                 iface.set_raw \
                     ( mode     = mode
                     , essid    = ssid
@@ -529,8 +532,16 @@ class Convert (object) :
                     lon = lon + " %f s" % n.gps_lon_sec
                 gps = dict (lat = lat, lon = lon)
                 if self.anonymize :
-                    lat = n.gps_lat_deg + n.gps_lat_min + (n.gps_lat_sec or 0)
-                    lon = n.gps_lon_deg + n.gps_lon_min + (n.gps_lon_sec or 0)
+                    lat = \
+                        ( n.gps_lat_deg
+                        + (n.gps_lat_min or 0) / 60.
+                        + (n.gps_lat_sec or 0) / 3600.
+                        )
+                    lon = \
+                        ( n.gps_lon_deg
+                        + (n.gps_lon_min or 0) / 60.
+                        + (n.gps_lon_sec or 0) / 3600.
+                        )
                     gps = dict (lat = "%2.2f" % lat, lon = "%2.2f" % lon)
             id = self.person_dupes.get (n.id_members, n.id_members)
             owner = self.person_by_id.get (id)
