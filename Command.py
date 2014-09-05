@@ -58,6 +58,7 @@
 #     5-May-2014 (CT) Replace `landing_page` bei `/about`; add `/impressum`
 #    12-Jun-2014 (CT) DRY startup message
 #    29-Aug-2014 (CT) Remove import for `AFS`
+#     5-Sep-2014 (CT) Add `RST_addons.User_Net_Interface_in_IP_Network`
 #    ««revision-date»»···
 #--
 
@@ -214,6 +215,11 @@ class Command (_Base_Command_, CNDB.Command) :
                     , RST_addons.User_Net_Interface
                         ( name            = "interface"
                         , short_title     = _T ("Interface")
+                        )
+                    , RST_addons.User_Net_Interface_in_IP_Network
+                        ( name            = "interface_in_ip_network"
+                        , short_title     = _T ("Interface in Network")
+                        , hidden          = True
                         )
                     , RST_addons.User_Wired_Interface
                         ( name            = "wired-interface"
