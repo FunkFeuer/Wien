@@ -41,25 +41,15 @@ from   _CNDB                    import CNDB
 from   _GTW                     import GTW
 from   _TFL                     import TFL
 
-import _CNDB._GTW.deploy
-import _GTW._Werkzeug.deploy
+import _CNDB.deploy
 
 from   _Base_Command_           import _Base_Command_
 
-class Command \
-          ( _Base_Command_
-          , CNDB.GTW.deploy.Command
-          , GTW.Werkzeug.deploy.Command
-          ) :
+class Command (_Base_Command_, CNDB.deploy.Command) :
     """Manage deployment of FFW application."""
 
     _defaults               = dict \
-        ( app_dir           = "www/app"
-        , app_module        = "./Command.py"
-        , bugs_address      = "tanzer@swing.co.at,ralf@runtux.com"
-        , copyright_holder  = "Mag. Christian Tanzer, Ralf Schlatterbeck"
-        , languages         = "de,en"
-        , project_name      = "FFW"
+        ( project_name      = "FFW"
         )
 
     class App_Config (_Base_Command_.Config) :
@@ -78,7 +68,7 @@ class Command \
 
     class _Babel_ (GTW.Werkzeug.deploy.Command._Babel_) :
 
-        _package_dirs       = ["_CNDB", "."]
+        _package_dirs       = ["."]
 
     # end class _Babel_
 

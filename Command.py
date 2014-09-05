@@ -63,36 +63,20 @@
 
 from   __future__  import absolute_import, division, print_function, unicode_literals
 
-from   _CNDB                  import CNDB
-from   _FFW                   import FFW
-from   _GTW                   import GTW
-from   _JNJ                   import JNJ
-from   _MOM                   import MOM
-from   _ReST                  import ReST
-from   _TFL                   import TFL
+from   _CNDB                    import CNDB
+from   _FFW                     import FFW
+from   _GTW                     import GTW
+from   _JNJ                     import JNJ
+from   _MOM                     import MOM
+from   _ReST                    import ReST
+from   _TFL                     import TFL
 
-from   _MOM.Product_Version   import Product_Version, IV_Number
+from   _Base_Command_           import _Base_Command_
+from   _CNDB._GTW               import RST_addons
 
-import _CNDB._OMP.import_CNDB
-import _GTW._OMP._Auth.import_Auth
-import _GTW._OMP._PAP.import_PAP
+import _CNDB.Command
 
-import _GTW._RST._MOM.Doc
-import _GTW._RST._MOM.Scope
-import _GTW._RST._TOP._MOM.Doc
-import _GTW._RST._TOP.ReST
-
-import _GTW._Werkzeug.Command
-
-import _GTW._OMP._Auth.Nav
-import _GTW._OMP._PAP.Nav
-
-import _CNDB._JNJ
-import _CNDB._OMP.Nav
-import _CNDB._OMP.RST_Api_addons
-
-import _GTW.HTML
-import _ReST.To_Html
+from   _MOM.Product_Version     import Product_Version, IV_Number
 
 from   _TFL                     import sos
 from   _TFL.I18N                import _, _T, _Tn
@@ -101,9 +85,6 @@ from   _TFL._Meta.Once_Property import Once_Property
 from   _TFL._Meta.Property      import Class_Property
 
 import _TFL.CAO
-
-from   _Base_Command_           import _Base_Command_
-from   _CNDB._GTW import RST_addons
 
 GTW.OMP.PAP.Phone.change_attribute_default         ("country_code", "43")
 
@@ -161,7 +142,8 @@ und Informationen dieser Homepage erwachsen, wird, soweit rechtlich zulässig,
 ausgeschlossen.
 
 """
-class Command (_Base_Command_, GTW.Werkzeug.Command) :
+
+class Command (_Base_Command_, CNDB.Command) :
     """Manage database, run server or WSGI app."""
 
     ANS                     = FFW
@@ -170,13 +152,6 @@ class Command (_Base_Command_, GTW.Werkzeug.Command) :
     _default_db_name        = "ffw"
     _defaults               = dict \
         ( copyright_start   = 2012
-        )
-    _opts                   = \
-        ( "-auth_required:B=True?Is authorization required?"
-        ,
-        )
-    _template_prefixes      = dict \
-        ( CNDB              = sos.path.dirname (_CNDB._JNJ.__file__)
         )
 
     @Once_Property
