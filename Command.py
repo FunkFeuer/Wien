@@ -59,6 +59,7 @@
 #    12-Jun-2014 (CT) DRY startup message
 #    29-Aug-2014 (CT) Remove import for `AFS`
 #     5-Sep-2014 (CT) Add `RST_addons.User_Net_Interface_in_IP_Network`
+#    13-Sep-2014 (CT) Add `RST_addons.User_Wireless_Interface_uses_Antenna`
 #    ««revision-date»»···
 #--
 
@@ -228,6 +229,10 @@ class Command (_Base_Command_, CNDB.Command) :
                     , RST_addons.User_Wireless_Interface
                         ( name            = "wireless-interface"
                         , short_title     = _T ("Wireless_Interface")
+                        )
+                    , RST_addons.User_Wireless_Interface_uses_Antenna
+                        ( name            = "wireless-interface-uses-antenna"
+                        , hidden          = True
                         )
                     , RST_addons.User_Antenna
                         ( name            = "antenna"
