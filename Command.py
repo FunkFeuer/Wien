@@ -60,6 +60,7 @@
 #    29-Aug-2014 (CT) Remove import for `AFS`
 #     5-Sep-2014 (CT) Add `RST_addons.User_Net_Interface_in_IP_Network`
 #    13-Sep-2014 (CT) Add `RST_addons.User_Wireless_Interface_uses_Antenna`
+#    26-Sep-2014 (CT) Add Alias for `/Doc/FFW`
 #    ««revision-date»»···
 #--
 
@@ -268,6 +269,11 @@ class Command (_Base_Command_, CNDB.Command) :
                 ( name            = "Doc"
                 , short_title     = _ ("Model doc")
                 , title           = _ ("Documentation for FFW object model")
+                )
+            , TOP.Alias \
+                ( name            = "/Doc/FFW"
+                , target          = "/Doc/CNDB"
+                , hidden          = True
                 )
             , TOP.MOM.Admin.Site
                 ( name            = "Admin"
