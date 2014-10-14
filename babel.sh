@@ -26,7 +26,7 @@ export PYTHONPATH=$(pwd):~/CNDB:$PYTHONPATH
 
 default_langs="en,de"
 default_dirs="_FFW ."
-lib=$(dirname $(python -c 'from _TFL import sos; print sos.path.dirname (sos.__file__)'))
+lib=$(dirname $(python -c 'from _TFL import sos; print (sos.path.dirname (sos.__file__))'))
 
 case "$cmd" in
     "extract" )

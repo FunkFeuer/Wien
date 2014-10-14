@@ -3,7 +3,7 @@
 # Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
 # #*** <License> ************************************************************#
 # This module is part of the program FFW.
-# 
+#
 # This module is licensed under the terms of the BSD 3-Clause License
 # <http://www.c-tanzer.at/license/bsd_3c.html>.
 # #*** </License> ***********************************************************#
@@ -140,7 +140,7 @@ class Command (_Base_Command_, CNDB.Command) :
     """Manage database, run server or WSGI app."""
 
     ANS                     = FFW
-    SALT                    = bytes ("fa89356c-0af1-4644-80d7-92702e4fd524")
+    SALT                    = b"fa89356c-0af1-4644-80d7-92702e4fd524"
 
     _default_db_name        = "ffw"
     _defaults               = dict \

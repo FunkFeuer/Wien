@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 # #*** <License> ************************************************************#
 # This module is part of the program FFW.
-# 
+#
 # This module is licensed under the terms of the BSD 3-Clause License
 # <http://www.c-tanzer.at/license/bsd_3c.html>.
 # #*** </License> ***********************************************************#
+
+from   __future__             import print_function
 
 import sys, os
 import re
@@ -120,7 +122,7 @@ class Consolidated_Interface (object) :
                 (left = dev, name = self.ifname, desc = desc, raw = True)
         manager = dev.node.manager
         scope   = self.convert.scope
-        for ip in self.ips.itervalues () :
+        for ip in pyk.itervalues (self.ips) :
             if self.verbose :
                 pyk.fprint \
                     ( "Adding IP %s to iface: %s/%s (of dev %s)"
@@ -249,7 +251,7 @@ class Consolidated_Device (object) :
             )
         d    = self.redeemer_devs [self.devid]
         desc = '\n'.join \
-            (': '.join ((v, d [k])) for k, v in comments.iteritems () if d [k])
+            (': '.join ((v, d [k])) for k, v in pyk.iteritems (comments) if d [k])
         dev = self.net_device = ffw.Net_Device \
             ( left = devtype
             , node = self.ffw_node
@@ -260,14 +262,14 @@ class Consolidated_Device (object) :
         self.convert.set_last_change (dev, self.changed, self.created)
         # no member info in DB:
         assert not self.id_members
-        for iface in self.interfaces.itervalues () :
+        for iface in pyk.itervalues (self.interfaces) :
             iface.create ()
         self.convert.scope.commit ()
         return dev
     # end def create
 
     def ip_iter (self) :
-        for ip in self.interfaces.iterkeys () :
+        for ip in pyk.iterkeys (self.interfaces) :
             yield ip
     # end def ip_iter
 
@@ -282,7 +284,7 @@ class Consolidated_Device (object) :
             msg = "Merge: already merged to %s" % other.merged
             pyk.fprint (msg)
             raise ValueError (msg)
-        for ifc in other.interfaces.itervalues () :
+        for ifc in pyk.itervalues (other.interfaces) :
             ifc.device = self
         other.merged = self
         other.set_done ()
@@ -350,14 +352,14 @@ class Convert (object) :
                 self.spider_ignore_ip [ip_dev].append (ip)
         olsr = get_olsr_container (cmd.olsr_file)
         self.olsr_nodes   = {}
-        for t in olsr.topo.forward.iterkeys () :
+        for t in pyk.iterkeys (olsr.topo.forward) :
             self.olsr_nodes [t]   = True
-        for t in olsr.topo.reverse.iterkeys () :
+        for t in pyk.iterkeys (olsr.topo.reverse) :
             self.olsr_nodes [t]   = True
         self.olsr_mid     = olsr.mid.by_ip
         self.olsr_hna     = olsr.hna
         self.rev_mid      = {}
-        for k, v in self.olsr_mid.iteritems () :
+        for k, v in pyk.iteritems (self.olsr_mid) :
             if k not in self.olsr_nodes :
                 pyk.fprint ("WARN: MIB %s: not in OLSR Topology" % k)
             #assert k in self.olsr_nodes
@@ -367,7 +369,7 @@ class Convert (object) :
         self.spider_info  = pickle.load (open (cmd.spider_dump, 'rb'))
         self.spider_devs  = {}
         self.spider_iface = {}
-        for ip, dev in self.spider_info.iteritems () :
+        for ip, dev in pyk.iteritems (self.spider_info) :
             if self.verbose :
                 pyk.fprint ("IP:", ip)
             ignore = {}
@@ -378,7 +380,7 @@ class Convert (object) :
                 continue
             dev.mainip = ip
             dev.done   = False
-            for iface in dev.interfaces.itervalues () :
+            for iface in pyk.itervalues (dev.interfaces) :
                 iface.done = False
                 for ip4 in iface.inet4 :
                     i4 = ip4.ip
@@ -480,8 +482,8 @@ class Convert (object) :
             if len (scope.uncommitted_changes) > 100 :
                 scope.commit ()
             gps = None
-            #print "LAT:", n.gps_lat_deg, n.gps_lat_min, n.gps_lat_sec
-            #print "LON:", n.gps_lon_deg, n.gps_lon_min, n.gps_lon_sec
+            #print ("LAT:", n.gps_lat_deg, n.gps_lat_min, n.gps_lat_sec)
+            #print ("LON:", n.gps_lon_deg, n.gps_lon_min, n.gps_lon_sec)
             if n.gps_lat_deg is None :
                 assert n.gps_lat_min is None
                 assert n.gps_lat_sec is None
@@ -625,7 +627,7 @@ class Convert (object) :
                          , (  0,   1) # ignore Funkfeuer Parkplatz
                          , (442,1019) # checked, old address listed in whois
                         ))
-    rev_person_dupes = dict ((v, k) for k, v in person_dupes.iteritems ())
+    rev_person_dupes = dict ((v, k) for k, v in pyk.iteritems (person_dupes))
 
     merge_adr = dict.fromkeys ((432, 26, 759, 295))
 
@@ -663,7 +665,7 @@ class Convert (object) :
                 return
             try :
                 p = Phone (x, m.town, c)
-            except ValueError, err :
+            except ValueError as err :
                 if str (err).startswith ('WARN') :
                     pyk.fprint (err)
                     return
@@ -760,7 +762,7 @@ class Convert (object) :
                 ( street     = street
                 , zip        = plz
                 , city       = ort
-                , country    = 'Austria'.decode ('utf-8')
+                , country    = pyk.decoded ('Austria', 'utf-8')
                 )
             self.pap.Subject_has_Address (person, address)
             return
@@ -779,7 +781,7 @@ class Convert (object) :
     def try_insert_address (self, m, person) :
         street  = ' '.join (x for x in (m.street, m.housenumber) if x)
         if street or m.town or m.zip :
-            country = 'Austria'.decode ('utf-8')
+            country = pyk.decoded ('Austria', 'utf-8')
             if not m.town :
                 pyk.fprint \
                     ( 'INFO: no city (setting to "Wien"): %s/%s'
@@ -797,7 +799,7 @@ class Convert (object) :
                     pyk.fprint ("INFO: no zip: %s/%s" % (m.id, person.pid))
             elif m.zip.startswith ('I-') :
                 m ['zip'] = m.zip [2:]
-                country = 'Italy'.decode ('utf-8')
+                country = pyk.decoded ('Italy', 'utf-8')
             if not street and not m.zip and m.town == 'Wien' :
                 return
             if not street :
@@ -889,7 +891,7 @@ class Convert (object) :
                     ("INFO: Using email %s in fax field as email" % m.fax)
             if m.instant_messenger_nick :
                 self.try_insert_im (person, m)
-            for a, c in self.phone_types.iteritems () :
+            for a, c in pyk.iteritems (self.phone_types) :
                 x = getattr (m, a)
                 self.try_insert_phone (person, m, x, c)
             if m.mentor_id and m.mentor_id != m.id :
@@ -918,13 +920,13 @@ class Convert (object) :
             return
         x = dict (self.company_actor)
         x.update (self.association_actor)
-        for l_id, p_id in x.iteritems () :
+        for l_id, p_id in pyk.iteritems (x) :
             person = self.person_by_id [p_id]
             legal  = self.person_by_id [l_id]
             self.pap.Person_in_Group (person, legal)
             self.manager_by_id [l_id] = person
         # Retrieve info from dupe account
-        for dupe, id in self.person_dupes.iteritems () :
+        for dupe, id in pyk.iteritems (self.person_dupes) :
             # older version of db or dupe removed:
             if id not in self.person_by_id :
                 continue
@@ -941,7 +943,7 @@ class Convert (object) :
             self.set_last_change (person, changed, created)
             if d.email :
                 self.try_insert_email (person, d, second = True)
-            for a, c in self.phone_types.iteritems () :
+            for a, c in pyk.iteritems (self.phone_types) :
                 x = getattr (d, a)
                 self.try_insert_phone (person, d, x, c)
             if  (   d.mentor_id is not None
@@ -963,7 +965,7 @@ class Convert (object) :
                 self.try_insert_im (person, d)
             if dupe in self.merge_adr :
                 self.try_insert_address (d, person)
-        for mentor_id, person_id in self.mentor.iteritems () :
+        for mentor_id, person_id in pyk.iteritems (self.mentor) :
             # can happen if a duplicate inserted this:
             if mentor_id == person_id :
                 continue
@@ -1021,8 +1023,8 @@ class Convert (object) :
 
     def create_ips_and_devices (self) :
         # devices and reserved nets from hna table
-        for ip4 in self.olsr_hna.by_dest.iterkeys () :
-            for n in self.ip4nets.iterkeys () :
+        for ip4 in pyk.iterkeys (self.olsr_hna.by_dest) :
+            for n in pyk.iterkeys (self.ip4nets) :
                 if ip4 in n :
                     break
             else :
@@ -1046,22 +1048,22 @@ class Convert (object) :
                     assert i not in self.olsr_nodes
                     assert i not in self.rev_mid
         if self.verbose :
-            for k in self.rsrvd_nets.iterkeys () :
+            for k in pyk.iterkeys (self.rsrvd_nets) :
                 pyk.fprint ("HNA route to: %s" % k)
         if self.debug :
             for ip4 in self.olsr_hna.by_dest :
-                for nw in self.ip4nets.iterkeys () :
+                for nw in pyk.iterkeys (self.ip4nets) :
                     if ip4 in nw :
                         pyk.fprint ("HNA: %s" % ip4)
 
-        for dev in self.cons_dev.itervalues () :
+        for dev in pyk.itervalues (self.cons_dev) :
             if dev.merged :
                 continue
             dev.create ()
     # end def create_ips_and_devices
 
     def reserve_net (self, nets, typ) :
-        for net, comment in sorted (nets.iteritems (), key = ip_mask_key) :
+        for net, comment in sorted (pyk.iteritems (nets), key = ip_mask_key) :
             if self.verbose :
                 pyk.fprint (net, comment)
             r = typ.query \
@@ -1100,7 +1102,7 @@ class Convert (object) :
         # check mid table
         midkey = []
         midtbl = {}
-        for ip4, aliases in self.olsr_mid.iteritems () :
+        for ip4, aliases in pyk.iteritems (self.olsr_mid) :
             if ip4 not in self.ip_by_ip :
                 pyk.fprint ("WARN: key ip %s from olsr mid not in ips" % ip4)
                 midkey.append (ip4)
@@ -1111,20 +1113,20 @@ class Convert (object) :
                         midtbl [ip4] = []
                     midtbl [ip4].append (a)
         assert not midkey
-        for k, v in midtbl.iteritems () :
+        for k, v in pyk.iteritems (midtbl) :
             x = dict.fromkeys (self.olsr_mid [k])
             for ip4 in v :
                 del x [ip4]
             self.olsr_mid [k] = x.keys ()
         # consolidate devices using information from spider data
         node_by_sdev = {}
-        for mainip, sdev in sorted (self.spider_devs.iteritems ()) :
+        for mainip, sdev in sorted (pyk.iteritems (self.spider_devs)) :
             if sdev.done :
                 continue
             sdev.done = True
             seen_ip = {}
             nodeid  = None
-            for sif in sorted (sdev.interfaces.itervalues ()) :
+            for sif in sorted (pyk.itervalues (sdev.interfaces)) :
                 assert not sif.done
                 sif.done = True
                 for in4 in sorted (sif.inet4) :
@@ -1149,22 +1151,22 @@ class Convert (object) :
                         node_by_sdev [sdev] [d.id_nodes] [d.id] = {}
                     node_by_sdev [sdev] [d.id_nodes] [d.id] [in4.ip] = True
             assert mainip in seen_ip
-        for sdev, nodes in sorted (node_by_sdev.iteritems ()) :
+        for sdev, nodes in sorted (pyk.iteritems (node_by_sdev)) :
             if len (nodes) > 1 :
                 pyk.fprint \
                     ( "WARN: spider device %s expands to %s nodes: %s"
                     % ( sdev.mainip
                       , len (nodes)
                       , ', '.join
-                        (self.node_by_id [n].name for n in nodes.iterkeys ())
+                        (self.node_by_id [n].name for n in pyk.iterkeys (nodes))
                       )
                     )
-            for n, devs in sorted (nodes.iteritems ()) :
+            for n, devs in sorted (pyk.iteritems (nodes)) :
                 sdevs = {}
                 sifs  = {}
                 dev1  = None
                 err   = False
-                for devid, ips in sorted (devs.iteritems ()) :
+                for devid, ips in sorted (pyk.iteritems (devs)) :
                     d = self.cons_dev [devid]
                     if d.merged :
                         pyk.fprint \
@@ -1187,7 +1189,7 @@ class Convert (object) :
                         dev1.merge (d)
                     else :
                         dev1 = d
-                    for ip in sorted (ips.iterkeys ()) :
+                    for ip in sorted (pyk.iterkeys (ips)) :
                         sdevs [self.spider_devs  [ip]] = True
                         if self.spider_iface [ip] not in sifs :
                             sifs  [self.spider_iface [ip]] = {}
@@ -1204,7 +1206,7 @@ class Convert (object) :
                         pyk.fprint ("------------------------------")
                     assert len (sifs)  >= 1
                     assert dev1
-                for sif, ips in sorted (sifs.iteritems ()) :
+                for sif, ips in sorted (pyk.iteritems (sifs)) :
                     l = len (ips)
                     assert l >= 1
                     ifaces = {}
@@ -1212,7 +1214,7 @@ class Convert (object) :
                         ifaces [ip] = dev1.interfaces [ip]
                     assert len (ifaces) == len (ips)
                     if1 = ip1 = None
-                    for ip, ifc in sorted (ifaces.iteritems ()) :
+                    for ip, ifc in sorted (pyk.iteritems (ifaces)) :
                         if if1 :
                             pyk.fprint \
                                 ( "Spider %-15s: "
@@ -1238,7 +1240,7 @@ class Convert (object) :
         # compound devices from mid table
         # We index nodes by mid-table entry (by the mid key-ip address)
         # for each mid entry there can be several nodes (config bug)
-        for ip4, aliases in sorted (self.olsr_mid.iteritems ()) :
+        for ip4, aliases in sorted (pyk.iteritems (self.olsr_mid)) :
             nodes = {}
             ip    = self.ip_by_ip [ip4]
             if ip.id_devices :
@@ -1273,10 +1275,10 @@ class Convert (object) :
     # end def build_device_structure
 
     def debug_output (self) :
-        for k in sorted (self.olsr_nodes.iterkeys ()) :
+        for k in sorted (pyk.iterkeys (self.olsr_nodes)) :
             pyk.fprint (k)
         for node in self.contents ['nodes'] :
-            nn = node.name.encode ('utf-8')
+            nn = pyk.encoded (node.name, 'utf-8')
             pyk.fprint ("Node: %s (%s)" % (nn, node.id))
             for d in self.dev_by_node.get (node.id, []) :
                 pyk.fprint ("    Device: %s" % d.name)
