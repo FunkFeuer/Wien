@@ -1,5 +1,5 @@
-README for the FFW web app
-===========================
+README for the Funkfeuer/Wien web app
+======================================
 
 :Authors:
 
@@ -9,13 +9,13 @@ README for the FFW web app
     Ralf Schlatterbeck
     <rsc@runtux.com>
 
-The FFW web app is an application that serves data about the network
-nodes deployed by www.funkfeuer.at.
+The Funkfeuer/Wien (FFW) web app is an application that serves data about the
+network nodes deployed by www.funkfeuer.at.
 
 It uses the `tapyr framework`_ and the `common node database`_ (CNDB).
 
 .. _`tapyr framework`: https://github.com/Tapyr/tapyr
-.. _`common node database`: https://github.com/CNDB/CNDB
+.. _`common node database`: https://github.com/FunkFeuer/common-node-db
 
 System requirements
 --------------------
@@ -201,9 +201,9 @@ system should something go wrong during the upgrade::
   $ mkdir v/1/www/media
   $ ln -s v/1 active
   $ ln -s v/2 passive
-  $ git clone git://github.com/Tapyr/tapyr.git v/1/tapyr
-  $ git clone git://github.com/CNDB/CNDB.git   v/1/cndb
-  $ git clone git://github.com/FFM/FFW.git     v/1/www/app
+  $ git clone git://github.com/Tapyr/tapyr.git              v/1/tapyr
+  $ git clone git://github.com/FunkFeuer/common-node-db.git v/1/cndb
+  $ git clone git://github.com/FunkFeuer/Wien.git           v/1/www/app
   $ cp -a v/1 v/2
 
   $ vi active/www/.ffw.config
