@@ -257,7 +257,7 @@ For https sites, you'll also need the modules::
 Finally we create a database and populate it with data::
 
   ### Create a database
-  $ python active/www/app/deploy.py create
+  $ python active/www/app/deploy.py app create
 
   ### Put some data into the database
 
