@@ -22,10 +22,10 @@ System requirements
 
 See https://github.com/FunkFeuer/common-node-db#system-requirements
 
-Package Installation for Debian Stable aka Wheezy
---------------------------------------------------
+Package Installation for Debian
+--------------------------------
 
-See https://github.com/FunkFeuer/common-node-db#package-installation-for-debian-stable-aka-wheezy
+See https://github.com/FunkFeuer/common-node-db#package-installation-for-debian
 
 How to install
 --------------
