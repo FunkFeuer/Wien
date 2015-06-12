@@ -1,14 +1,14 @@
 # Translations template for FFW.
-# Copyright (C) 2014 Mag. Christian Tanzer, Ralf Schlatterbeck
+# Copyright (C) 2015 Mag. Christian Tanzer, Ralf Schlatterbeck
 # This file is distributed under the same license as the FFW project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: FFW 1.0\n"
 "Report-Msgid-Bugs-To: tanzer@swing.co.at,ralf@runtux.com\n"
-"POT-Creation-Date: 2014-09-04 09:41+0200\n"
+"POT-Creation-Date: 2015-06-12 19:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"

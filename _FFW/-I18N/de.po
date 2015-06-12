@@ -1,14 +1,14 @@
 # Translations template for Project.
-# Copyright (C) 2014 Copyright
+# Copyright (C) 2015 Copyright
 # This file is distributed under the same license as the Project project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Project 0.9\n"
 "Report-Msgid-Bugs-To: bugs@domain.unknown\n"
-"POT-Creation-Date: 2014-09-04 09:42+0200\n"
+"POT-Creation-Date: 2015-06-12 19:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
