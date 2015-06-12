@@ -27,11 +27,12 @@ export PYTHONPATH=$(pwd):~/CNDB:$PYTHONPATH
 default_langs="en,de"
 default_dirs="_FFW ."
 lib=$(dirname $(python -c 'from _TFL import sos; print (sos.path.dirname (sos.__file__))'))
+cndb=~/CNDB
 
 case "$cmd" in
     "extract" )
         dirs=${1:-${default_dirs}}; shift
-        ( cd ${lib}; ./babel.sh extract )
+        ( cd ${cndb}; ./babel.sh extract )
         python ${lib}/_TFL/Babel.py extract                                          \
             -bugs_address        "tanzer@swing.co.at,ralf@runtux.com"         \
             -charset             utf-8                                        \
@@ -44,7 +45,7 @@ case "$cmd" in
     "language" )
         langs=${1:-${default_langs}}; shift
         dirs=${1:-${default_dirs}}; shift
-        ( cd ${lib}; ./babel.sh language "${langs}" )
+        ( cd ${cndb}; ./babel.sh language "${langs}" )
         python ${lib}/_TFL/Babel.py language -languages "${langs}" -sort $dirs
         ;;
     "compile" )
