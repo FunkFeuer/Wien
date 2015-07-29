@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2012-2014 Mag. Christian Tanzer All rights reserved
+# Copyright (C) 2012-2015 Mag. Christian Tanzer All rights reserved
 # Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
 # #*** <License> ************************************************************#
 # This module is part of the program FFW.
@@ -51,6 +51,7 @@
 #     5-Sep-2014 (CT) Add `RST_addons.User_Net_Interface_in_IP_Network`
 #    13-Sep-2014 (CT) Add `RST_addons.User_Wireless_Interface_uses_Antenna`
 #    26-Sep-2014 (CT) Add Alias for `/Doc/FFW`
+#    29-Jul-2015 (CT) Adapt to name change of PAP.Phone attributes
 #    ««revision-date»»···
 #--
 
@@ -79,7 +80,7 @@ from   _TFL._Meta.Property      import Class_Property
 
 import _TFL.CAO
 
-GTW.OMP.PAP.Phone.change_attribute_default         ("country_code", "43")
+GTW.OMP.PAP.Phone.change_attribute_default ("cc", "+43")
 
 FFW.Version = Product_Version \
     ( productid           = u"FFW node data base"
