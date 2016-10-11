@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2012-2014 Mag. Christian Tanzer All rights reserved
+# Copyright (C) 2012-2016 Mag. Christian Tanzer All rights reserved
 # Glasauergasse 32, A--1130 Wien, Austria. tanzer@swing.co.at
 # #*** <License> ************************************************************#
 # This module is part of the program FFW.
-# 
+#
 # This module is licensed under the terms of the BSD 3-Clause License
 # <http://www.c-tanzer.at/license/bsd_3c.html>.
 # #*** </License> ***********************************************************#
@@ -25,6 +25,7 @@
 #     4-May-2013 (CT) Add `RAT`
 #     2-May-2014 (CT) Use option `webmaster`
 #     7-Jul-2014 (CT) Add `cndb_template_dir` to `template_dirs`
+#    11-Oct-2016 (CT) Import `Media` from `CHJ`, not `GTW`
 #    ««revision-date»»···
 #--
 
@@ -41,7 +42,7 @@ from   _TFL                   import sos
 from   _TFL.Attr_Mapper       import Attr_Mapper
 from   _TFL.I18N              import _, _T, _Tn
 
-import _GTW.Media
+import _CHJ.Media
 
 import _GTW._RST.RAT
 import _GTW._RST._TOP.import_TOP
