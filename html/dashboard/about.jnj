@@ -25,7 +25,7 @@
 {%- block source_code -%}
   {{ super () }}
   Den Funkfeuer-spezifischen Source Code findest du auf
-  <a href="http://github.com/FFM/FFW/">github</a>.
+  <a href="https://github.com/FunkFeuer/Wien">github</a>.
 {%- endblock source_code -%}
 
 {%- block welcome_image -%}
@@ -118,7 +118,7 @@
   <p>
     In Summe ist die neue common Node DB eine komplette neue
     Implementation. Ihr Source code findet sich auf
-    <a href="http://github.com/FFM/FFM/">github.com</a>.
+    <a href="https://github.com/FunkFeuer/common-node-db">github.com</a>.
   </p>
 
   <p>
