@@ -1272,8 +1272,8 @@ class Convert (object) :
                                 % (d, d.merged, nodes [d.id_nodes])
                                 )
                         continue
-                    assert not nodes [d.id_nodes].merged
-                    nodes [d.id_nodes].merge (d)
+                    if not nodes [d.id_nodes].merged :
+                        nodes [d.id_nodes].merge (d)
             if len (nodes) > 1 :
                 pyk.fprint \
                     ("WARN: mid %s expands to %s nodes" % (ip4, len (nodes)))
