@@ -1050,7 +1050,8 @@ class Convert (object) :
                 # FIXME: Reserve network in database
                 self.rsrvd_nets [ip4] = True
                 for i in ip4 :
-                    assert i not in self.olsr_nodes
+                    if i in self.olsr_nodes :
+                        pyk.fprint ("WARN: ip %s in olsr_nodes" % ip)
                     assert i not in self.rev_mid
         if self.verbose :
             for k in pyk.iterkeys (self.rsrvd_nets) :
@@ -1272,7 +1273,10 @@ class Convert (object) :
                                 % (d, d.merged, nodes [d.id_nodes])
                                 )
                         continue
-                    if not nodes [d.id_nodes].merged :
+                    if nodes [d.id_nodes].merged :
+                        pyk.fprint \
+                            ("ERR: %s already merged" % (nodes [d.id_nodes]))
+                    else :
                         nodes [d.id_nodes].merge (d)
             if len (nodes) > 1 :
                 pyk.fprint \
