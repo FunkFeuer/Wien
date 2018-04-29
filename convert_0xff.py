@@ -26,9 +26,9 @@ import _CNDB._OMP
 from   _GTW._OMP._PAP         import PAP
 from   _GTW._OMP._Auth        import Auth
 from   _MOM.import_MOM        import Q
-from   olsr.parser            import get_olsr_container
-from   spider.parser          import Guess
-from   spider.common          import unroutable, Interface, Inet4, WLAN_Config
+from   ff_olsr.parser         import get_olsr_container
+from   ff_spider.parser       import Guess
+from   ff_spider.common       import unroutable, Interface, Inet4, WLAN_Config
 
 import _TFL.CAO
 import Command
@@ -475,9 +475,11 @@ class Convert (object) :
     def create_nodes (self) :
         scope = self.scope
         for n in self.contents ['nodes'] :
-            if n.id < 0 :
+            if n.id < 0 and n.id != -803 :
                 pyk.fprint ("WARN: Ignoring Node %s/%s" % (n.name, n.id))
                 continue
+            if n.name == '-803' :
+                n.name = 'n-803'
             pyk.fprint ("Processing Node: %s" % n.name)
             if len (scope.uncommitted_changes) > 100 :
                 scope.commit ()
@@ -626,6 +628,9 @@ class Convert (object) :
                          , (756, 758) # checked, real dupe
                          , (  0,   1) # ignore Funkfeuer Parkplatz
                          , (442,1019) # checked, old address listed in whois
+                         , (1082, 1084) # checked, same email and phone
+                         , (1096, 1094) # checked, same attributes
+                         , (1113, 1114) # checked
                         ))
     rev_person_dupes = dict ((v, k) for k, v in pyk.iteritems (person_dupes))
 
@@ -872,7 +877,7 @@ class Convert (object) :
                 cls = self.pap.Person
                 pd = dict (first_name = m.id, last_name = 'Funkfeuer')
             if self.verbose :
-                typ = cls.__name__.lower ()
+                typ = cls._etype.__name__.lower ()
                 pyk.fprint ( "Creating %s: %s" % (typ, repr (name)))
             person = cls (raw = True, ** pd)
             if m.id == 1 :
@@ -907,7 +912,7 @@ class Convert (object) :
                 if m.id in self.associations :
                     cls = self.pap.Association
                 name = ' '.join ((m.firstname, m.lastname))
-                typ  = cls.__name__.lower ()
+                typ  = cls._etype.__name__.lower ()
                 pyk.fprint ( "Creating %s: %s" % (typ, repr (name)))
                 legal = cls (name = name, raw = True)
                 # copy property links over
