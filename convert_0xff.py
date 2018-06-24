@@ -1039,19 +1039,25 @@ class Convert (object) :
                 continue
             if ip4.mask == 32 :
                 if ip4 not in self.olsr_nodes :
-                    ip = self.ip_by_ip [ip4]
-                    if ip.id_devices :
-                        d = self.cons_dev [ip.id_devices]
-                        d.hna = True
+                    if ip4 not in self.ip_by_ip :
+                        pyk.fprint ("WARN: IP %s not in DB" % ip4)
                     else :
-                        # FIXME: Reserve network in database
-                        self.rsrvd_nets [ip4] = True
+                        ip = self.ip_by_ip [ip4]
+                        if ip.id_devices :
+                            d = self.cons_dev [ip.id_devices]
+                            d.hna = True
+                        else :
+                            # FIXME: Reserve network in database
+                            self.rsrvd_nets [ip4] = True
             else :
                 # FIXME: Reserve network in database
                 self.rsrvd_nets [ip4] = True
                 for i in ip4 :
                     if i in self.olsr_nodes :
-                        pyk.fprint ("WARN: ip %s in olsr_nodes" % ip)
+                        pyk.fprint \
+                            ( "WARN: IP %s from hna-range %s also in olsr nodes"
+                            % (i, ip4)
+                            )
                     assert i not in self.rev_mid
         if self.verbose :
             for k in pyk.iterkeys (self.rsrvd_nets) :
