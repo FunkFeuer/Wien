@@ -24,7 +24,6 @@
 #    10-Jul-2014 (CT) Derive `Command` from `CNDB.GTW.deploy.Command`, too
 #    ««revision-date»»···
 #--
-
 from   __future__  import absolute_import, division, print_function #, unicode_literals
 
 from   _CNDB                    import CNDB

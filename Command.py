@@ -55,8 +55,6 @@
 #    ««revision-date»»···
 #--
 
-from   __future__  import absolute_import, division, print_function, unicode_literals
-
 from   _CNDB                    import CNDB
 from   _FFW                     import FFW
 from   _GTW                     import GTW

@@ -20,8 +20,6 @@
 #    ««revision-date»»···
 #--
 
-from   __future__  import absolute_import, division, print_function, unicode_literals
-
 from   _MOM                 import MOM
 import _MOM.Derived_PNS
 
